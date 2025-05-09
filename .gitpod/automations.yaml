@@ -1,0 +1,39 @@
+tasks:
+    build:
+        name: Build Code
+        description: "Builds the application using yarn"
+        triggeredBy:
+            - postDevcontainerStart
+            - manual
+        command: yarn build
+
+    test:
+        name: Run unit tests
+        description: "Executes the test suite"
+        triggeredBy:
+            - manual
+        dependsOn:
+            - build
+        command: yarn test
+
+    setup:
+        name: Set up the environment
+        description: "Completes the environment setup"
+        triggeredBy:
+            - postEnvironmentStart
+        dependsOn:
+            - build
+            - test
+        command: |
+            echo "Setting up the environment..."
+            echo "all set up and ready to go"
+
+services:
+    dev:
+        name: Development Server
+        description: "Runs the development server"
+        triggeredBy:
+            - postDevcontainerStart
+        commands:
+            start: yarn dev
+            ready: curl -s http://localhost:3000 
